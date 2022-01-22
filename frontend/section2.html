@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Challenge #2: DOM/BrowserJS</title>
+    <style>
+      html,
+      body {
+          height: 100%;
+      }
+      body {
+          max-width: 1200px;
+          border: 0px;
+          margin: 30px auto;
+          padding: 30px;
+      }
+      section {
+          margin: 100px 0px;
+      }
+      h1 {
+        text-align: center;
+      }
+      .logo {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 65px;
+      } 
+      form {
+        margin-bottom: 40px;
+      }
+    </style>
+  </head>
+  <body>
+
+
+
+
+    <img src="./assets/PreventiaLogoSmall.png" class="logo">
+
+    <h1>Section #2: <small>JavaScript DOM Interactions</small></h1>
+
+    <section>
+      <h2>To Complete:</h2>
+      <ol>
+        <li>Open this file in your IDE</li>
+        <li>Do the objective of each question by writting your code where it says "your code here".</li>
+      </ol>
+      Note: Remember, you can use whatever libraries/frameworks you need to get your code to work. If you do choose to use any libraries make sure that they work when you run this file in your browser.
+    </section>
+
+    <section id="q1">
+      <h2>Question 1</h2>
+      <p>Write code that gets the first name and last name from the form below and displays it in the span. (Make sure to sanitize)</p>
+
+      <form id="form1">
+        First name: <input id="firstName" type="text" name="fname" value="David"><br>
+        Last name: <input id="lastName" type="text" name="lname" value="Beckham"><br>
+        <input type="submit" value="Submit">
+      </form>
+
+      <div id="fullName">
+        My name is <span id="fullName"></span>.
+      </div>
+
+      <script>
+        // Write your code here
+      </script>
+
+    </section>
+
+    <hr />
+
+
+
+
+
+
+    <section id="q2">
+
+      <h2>Question 2</h2>
+
+      <p>Write a JavaScript program to display a random image in the div below (clicking on the button) from the list.</p>
+
+
+      <div>
+        <button>Generate Image</button>
+        <img id="myImg">
+      </div>
+
+      <script>
+        const listOfImages = [
+          {
+            "src": "http://farm4.staticflickr.com/3691/11268502654_f28f05966c_m.jpg", "width": "240", "height": "160"
+          },
+          {
+            "src": "http://farm1.staticflickr.com/33/45336904_1aef569b30_n.jpg", "width": "320", "height": "195"
+          },
+          {
+            "src": "http://farm6.staticflickr.com/5211/5384592886_80a512e2c9.jpg", "width": "500", "height": "343"
+          }
+        ];
+        
+        // Write your code here
+      </script>
+
+    </section>
+
+
+
+  </body>
+</html>
