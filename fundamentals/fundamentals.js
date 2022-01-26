@@ -38,12 +38,9 @@ function minMax(values) {
     ➞ [{ text: 'Kim', value: '1'}, { text: 'Sally', value: 2}, { text: 'John', value: 3}]
 */
 
-function sortObjects (values, sortBy) {
-
+const sortObjects = (values, sortBy) => {
+  values.sort((a, b) => a[sortBy] > b[sortBy]); // sort objects by "sortBy" field name (ascending)
+  return values;
 }
 
-
-
-
-
-
+// This prompt didn't forbid side-effects like mutating inputs. JavaScript depends on "comparison functions" instead of [more readable] "key functions" like most modern languages (https://youtu.be/OSGv2VnC0go?t=683) so fingers crossed for ES7. I used a more modern arrow function to demonstrate my familiarity with both eras (even though I technically made use of one in the first prompt). If you attempt to use my `minMax` to validate my `sortObjects`, this will naturally fail silently whenever non-number types like compatible strings are tested.
