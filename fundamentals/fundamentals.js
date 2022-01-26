@@ -30,7 +30,7 @@ function minMax (values) {
   Create a function that takes an array of objects and a string field name, and returns the array of objects sorted in ascending order by the field name.
 
   Example:
-  sortObjects[{ text: 'Kim', value: '1'}, { text: 'John', value: 3}, { text: 'Sally', value: 2}], 'value') 
+  sortObjects([{ text: 'Kim', value: '1'}, { text: 'John', value: 3}, { text: 'Sally', value: 2}], 'value') 
     ➞ [{ text: 'Kim', value: '1'}, { text: 'Sally', value: 2}, { text: 'John', value: 3}]
 */
 
