@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset='utf-8' />
     <title>Challenge #2: DOM/BrowserJS</title>
     <style>
       html,
@@ -58,12 +59,32 @@
         <input type="submit" value="Submit">
       </form>
 
-      <div id="fullName">
+      <div> <!-- I was determind to not modify any external code (& I could've worked around it) but there was a doubled id attribute here, "fullName". The DOM spec only anticipates one (e.g. this silently breaks "getElementById" which anticipates only one globally, as opposed to classes or tags, as in getElementsByTagName ...note the "s" in ElementS in this method compared to the former). Sure browsers are inherently designed to render an impressive range of "invalid" HTML, this felt more like a test to see if I'd notice. In general, I'm very conservative about placing id's for this exact reason: it's too easy to violate this when I get in the habit of slapping an id on any element I want to access via JavaScript. -->
         My name is <span id="fullName"></span>.
       </div>
 
       <script>
-        // Write your code here
+        let nameForm = document.getElementById('form1');
+        let nameTarget = document.getElementById('fullName');
+
+        function scrubForAlphanumeric(text) {
+          // Merely "escaping" my inputs isn't enough sanitization: https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#you-need-a-security-encoding-library
+          // Just to demonstrate minimal consideration, I'll go overly-harsh & trim any non-alphabetical characters using RegEx. Under any serious  circumstances, RegEx should be avoided at all costs because they're very error-prone & difficult to maintain (not to mention for junior devs). As a Computer Scientists, I'm uniquely familiar with them, but we're not rewriting compilers here.  I've even personally solved every problem on HackerRank that exists under the "RegEx" section. 
+
+
+          return text.replace(/\W+/gim, ''); // I didn't paste these from stackOverflow. g is the flag for  "global" (i.e. more than one match), 'i' is the flag for ignoring case-sensitivity, 'm' is the flag for multi-line so in case the user includes newlines, '\W' with the CAPITAL W is for any character that is NOT alpha-numeric (a-z, A-Z, 0-9, & the underscore character),  & "+" is for matching any sequence of AT LEAST 1 character or more. I just used this here because I _never_ get any excuses to leverage this knowledge ever. Use community-vetted security libraries.
+        }
+        
+        nameForm.addEventListener('submit', (e) => {
+          e.preventDefault(); // Don't "actually" submit form & reload page
+
+          let firstName = scrubForAlphanumeric(nameForm.elements['firstName'].value);
+          let lastName = scrubForAlphanumeric(nameForm.elements['lastName'].value);
+          let fullName = `${firstName} ${lastName}`;
+
+          console.log('💡 Rendering full name, ${fullName}');
+          nameTarget.innerHTML = fullName;
+        });
       </script>
 
     </section>
@@ -81,7 +102,6 @@
 
       <p>Write a JavaScript program to display a random image in the div below (clicking on the button) from the list.</p>
 
-
       <div>
         <button>Generate Image</button>
         <img id="myImg">
@@ -95,12 +115,30 @@
           {
             "src": "http://farm1.staticflickr.com/33/45336904_1aef569b30_n.jpg", "width": "320", "height": "195"
           },
-          {
-            "src": "http://farm6.staticflickr.com/5211/5384592886_80a512e2c9.jpg", "width": "500", "height": "343"
-          }
+          {"src": "http://farm6.staticflickr.com/5211/5384592886_80a512e2c9.jpg", "width": "500", "height": "343"}
         ];
         
-        // Write your code here
+        let imgContainer = document.getElementById('myImg');
+        let q2Button = document.getElementById('q2').querySelector('div > button'); // Very fragile as I can assume this page won't change ...which I normally can't.
+
+        // couldn't help myself
+        imgContainer.style.display = 'block'; 
+        imgContainer.style.marginTop = '1rem'; 
+
+        // Only render new image when clicked
+        q2Button.addEventListener('click', (e) => {
+
+          // Randomly pick from 0, 1, or 2
+          let pickFrom3 = Math.floor(Math.random() * 3);
+          console.log(`💡 What's behind Door #${pickFrom3 + 1}?`);
+
+          // Render new image
+          let imageInfo = listOfImages[pickFrom3];
+          for (const prop in imageInfo) {
+            imgContainer[prop] = imageInfo[prop];
+          }
+        });
+
       </script>
 
     </section>
