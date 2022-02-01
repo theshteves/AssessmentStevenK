@@ -7,10 +7,28 @@
 
     <!-- inline CSS ftw (these abstractions are the first candidates for components) -->
     <style type="text/css" rel="stylesheet">
-      .nav-conversation {}
-      .said-they { background-color: #eeeeee; width: max-content; padding: 1rem; margin: 1rem; border-radius: .25rem; clear: both; float: left; }
-      .said-me {   background-color: #78e3ed; width: max-content; padding: 1rem; margin: 1rem; border-radius: .25rem; clear: both; float: right; text-align: right; }
-      #messageDraft { background-color: #f0f0f0; }
+      .nav-chat { width: 100%; height: 4rem; border-bottom-width: 2px; overflow: hidden; display: flex; align-items: center; }
+      .nav-chat > img { height: 100%; padding: .5rem; border-radius: 64px; }
+      .nav-chat p { width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+      .nav-chat-details { width: calc(100% - 5rem); }
+      .nav-chat-group { font-weight: 100; color: gray; }
+      .nav-chat-preview { font-size: 14px; font-weight: 300; color: dimgray; }
+      .nav-chat-people::after { content: " –"; }
+      .nav-chat-people { font-weight: 400; color: black; }
+
+      .said      { padding: 1rem; margin: 1rem; clear: both; }
+      .said-me   { float: right; text-align: right; margin-bottom: 0; }
+      .said-they { float: left; margin: 0 0 0 3rem; }
+      .said-they::before { content: ""; display: inline-block; background-image: url("https://cdn.vuetifyjs.com/images/lists/1.jpg"); background-size: cover; background-position: center center; border-radius: 8rem; width: 2rem; height: 2rem; margin-left: -3.5rem; }
+
+      .said      > .said-time { max-width: 100%; margin-top: -2rem; font-size: 10px; font-weight: 200; white-space: nowrap; color: dimgray; }
+      .said-me   > .said-time { margin-right: -1rem; white-space: nowrap; text-align: right; }
+      .said-they > .said-time { margin-left: -1rem; }
+
+      .said      > .said-body { padding: 1rem; border-radius: .25rem; width: fit-content; }
+      .said-me   > .said-body { background-color: #78e3ed; margin-right: -1rem; margin-top: -1rem; float: right; }
+      .said-they > .said-body { background-color: #eeeeee; margin-left:  -1rem; }
     </style>
 
     <!-- Given no mobile views (I don't consider the nav-less mvp a viable mobile intrface), I'll skip mobile-first design in favor of a web-only design with a similar aspect ratio -->
@@ -19,70 +37,152 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
 
-  <body class="container-full h-screen grid grid-cols-12 bg-green-600"> <!-- green background for detecting faults in CSS Grid -->
+  <body class="container-full h-screen grid grid-cols-12 overflow-hidden">
 
-    <nav class="col-span-3">
-      <h1 class="text-3xl font-bold my-4 mx-8">Chats</h1>
-      <!--
-      <ol>
-        <li class="nav-conversation">
-          <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg" alt="John Smith's headshot" />
-        </li>
-        <li class="nav-conversation">
-          <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg" alt="John Smith's headshot" />
-        </li>
-        <li class="nav-conversation">
-          <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg" alt="John Smith's headshot" />
-        </li>
+    <!-- navbar hides when screen width < 768px -->
+    <nav class="hidden md:block md:col-span-3 h-screen border-r-2">
+      <h1 class="h-16 text-3xl font-bold box-border py-4 px-8">Chats</h1>
+
+      <ol class="h-[calc(100vh-4rem)] overflow-y-auto">
+        <div class="nav-chat">
+          <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg" alt="John Smith headshot" />
+          <div class="nav-chat-details">
+            <p class="nav-chat-subject">
+              Have a minute?
+            </p>
+            <p class="nav-chat-preview">
+              <span class="nav-chat-people">John Smith</span>
+              Seriously, ask me anything...
+            </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-chat">
+          <img src="https://stevenkneiser.com/static/theshteves-transparent-5e49d19110b370c878e8d00155165203.webp" alt="Steven Kneiser headshot" />
+          <div class="nav-chat-details">
+            <p class="nav-chat-subject">
+              Did I get the job?
+            </p>
+            <p class="nav-chat-preview">
+              <span class="nav-chat-people">Steven Kneiser</span>
+              Did they mention it at all?
+            </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-chat">
+          <img src="https://cdn.vuetifyjs.com/images/lists/4.jpg" alt="Ali Connors headshot" />
+          <div class="nav-chat-details">
+            <p class="nav-chat-subject">
+              Brunch this weekend?
+            </p>
+            <p class="nav-chat-preview">
+              <span class="nav-chat-people">Ali Connors</span>
+              I'll be in your city after the tournament
+            </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-chat">
+          <img src="https://cdn.vuetifyjs.com/images/lists/2.jpg" alt="Alex Smith headshot" />
+          <div class="nav-chat-details">
+            <p class="nav-chat-subject">
+              Summer BBQ
+              <span class="nav-chat-group">4</span>
+            </p>
+            <p class="nav-chat-preview">
+              <span class="nav-chat-people">Alex, Scott, Jennifer</span>
+              Last summer was awesome!
+            </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-chat">
+          <img src="https://cdn.vuetifyjs.com/images/lists/3.jpg" alt="Britta Holt headshot" />
+          <div class="nav-chat-details">
+            <p class="nav-chat-subject">
+              Recipe to try
+            </p>
+            <p class="nav-chat-preview">
+              <span class="nav-chat-people">Britta Holt</span>
+              We should gather more herbs &amp; spices
+            </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-chat">
+          <img src="https://cdn.vuetifyjs.com/images/lists/5.jpg" alt="Julia Bird headshot" />
+          <div class="nav-chat-details">
+            <p class="nav-chat-subject">
+              Did they call him back?
+            </p>
+            <p class="nav-chat-preview">
+              <span class="nav-chat-people">Julia Bird</span>
+              Of all the people in the world, I'm surprised that they took so long to deliberate on him.
+            </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-chat">
+          <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg" alt="John Smith headshot" />
+          <div class="nav-chat-details">
+            <p class="nav-chat-subject">
+              Hackathon weekend
+              <span class="nav-chat-group">5</span>
+            </p>
+            <p class="nav-chat-preview">
+              <span class="nav-chat-people">John, Jane, Benny, Percy</span>
+              I've got a couple ideas to run by Benny &amp; Jane before we settle on this one
+            </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-chat">
+          <img src="https://cdn.vuetifyjs.com/images/lists/3.jpg" alt="Britta Holt headshot" />
+          <div class="nav-chat-details">
+            <p class="nav-chat-subject">
+              Referrals?
+              <span class="nav-chat-group">3</span>
+            </p>
+            <p class="nav-chat-preview">
+              <span class="nav-chat-people">Britta, Cam</span>
+              No problem! Thanks for asking
+            </p>
+            </div>
+          </div>
+        </div>
       </ol>
-      -->
     </nav>
 
-    <section class="col-span-9 h-screen auto-rows-fr bg-slate-300 overflow-hidden">
 
-      <div class="row-span-1 bg-red-600 h-[6.25%] flex items-center">
+    <section class="col-span-12 md:col-span-9 h-screen auto-rows-fr overflow-hidden">
+      <div class="row-span-1 h-16 flex items-center border-b-2">
         <img class="rounded-full h-full p-2" src="https://cdn.vuetifyjs.com/images/lists/1.jpg" alt="John Smith's headshot" />
-        <h2 class="text-xl ml-2">John Smith</h2>
+        <h2 class="text-xl ml-2 font-medium">John Smith</h2>
       </div>
 
-      <main id="messageHistory" class="h-[87.5%] bg-red-400 overflow-y-auto">
-        <div class="said-me">
-          u up?
+      <main id="messageHistory" class="h-[calc(100vh-8rem)] pt-4 overflow-y-auto">
+        <div class="said said-me">
+          <p class="said-time">1/1/2022, 1:11:11 AM</p>
+          <p class="said-body">Hey! Do you have a minute?</p>
         </div>
-        <div class="said-they">
-          knock
+        <div class="said said-they">
+          <p class="said-time">1/1/2022, 1:11:11 AM</p>
+          <p class="said-body">Sure, what's up?</p>
         </div>
-        <div class="said-they">
-          knock
-        </div>
-        <div class="said-me">
-          who
-        </div>
-        <div class="said-me">
-          is
-        </div>
-        <div class="said-me">
-          there?
-        </div>
-
-        <div class="said-they">testing<br />for<br />overflow!</div>
-        <div class="said-me">testing<br />for<br />overflow?</div>
-        <div class="said-they">testing<br />for<br />overflow!</div>
-        <div class="said-me">testing<br />for<br />overflow?</div>
-        <div class="said-they">testing<br />for<br />overflow!</div>
-        <div class="said-me">testing<br />for<br />overflow?</div>
-        <div class="said-they">testing<br />for<br />overflow!</div>
-        <div class="said-me">testing<br />for<br />overflow?</div>
-        <div class="said-they">testing<br />for<br />overflow!</div>
-        <div class="said-me">testing<br />for<br />overflow?</div>
-        <div class="said-they">testing<br />for<br />overflow!</div>
-        <div class="said-me">testing<br />for<br />overflow?</div>
       </main>
 
-      <form id="draftMessageForm" class="h-[6.25%] bg-red-200 flex justify-around items-center">
-        <input type="text" id="messageDraft" name="messageDraft" placeholder="Type a message..." class="w-11/12 h-5/6 p-4 rounded-full" />
-        <button class="bg-blue-600 p-4 h-full inline-block r-0" role="submit">
-          <img src="./arrow-icon.png" alt="pointed arrow to submit form" class="h-full w-full r-0" />
+      <form id="draftMessageForm" class="h-16 flex justify-around items-center">
+        <input type="text" id="messageDraft" name="messageDraft" placeholder="Type a message... (seriously, try it)" class="w-11/12 h-5/6 p-4 mx-2 rounded-full bg-[#f0f0f0]" />
+        <button class="h-8 inline-block mr-2" role="submit">
+          <img src="./arrow-icon.png" alt="pointed arrow to submit form" class="h-full" />
         </button>
       </form>
     </section>
