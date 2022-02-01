@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge #1</title>
+
+    <!-- inline CSS ftw (these abstractions are the first candidates for components) -->
+    <style type="text/css" rel="stylesheet">
+      .nav-conversation {}
+      .said-they { background-color: #eeeeee; width: max-content; padding: 1rem; margin: 1rem; border-radius: .25rem; clear: both; float: left; }
+      .said-me {   background-color: #78e3ed; width: max-content; padding: 1rem; margin: 1rem; border-radius: .25rem; clear: both; float: right; text-align: right; }
+      #messageDraft { background-color: #f0f0f0; }
+    </style>
+
+    <!-- Given no mobile views (I don't consider the nav-less mvp a viable mobile intrface), I'll skip mobile-first design in favor of a web-only design with a similar aspect ratio -->
+    <!-- I'm comfortable with vanilla CSS, but TailwindCSSv3 is an innovative paradigm that helps me iterate much faster w/ a consistent built-in design language (v3 no longer even needs a PostCSS build step) -->
+    <!-- I also would normally reach for React to craft extensible components, but I wanted to prove my comfort with minimal dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="container-full h-screen grid grid-cols-12 bg-green-600"> <!-- green background for detecting faults in CSS Grid -->
+
+    <nav class="col-span-3">
+      <h1 class="text-3xl font-bold my-4 mx-8">Chats</h1>
+      <!--
+      <ol>
+        <li class="nav-conversation">
+          <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg" alt="John Smith's headshot" />
+        </li>
+        <li class="nav-conversation">
+          <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg" alt="John Smith's headshot" />
+        </li>
+        <li class="nav-conversation">
+          <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg" alt="John Smith's headshot" />
+        </li>
+      </ol>
+      -->
+    </nav>
+
+    <section class="col-span-9 h-screen auto-rows-fr bg-slate-300 overflow-hidden">
+
+      <div class="row-span-1 bg-red-600 h-[6.25%] flex items-center">
+        <img class="rounded-full h-full p-2" src="https://cdn.vuetifyjs.com/images/lists/1.jpg" alt="John Smith's headshot" />
+        <h2 class="text-xl ml-2">John Smith</h2>
+      </div>
+
+      <main id="messageHistory" class="h-[87.5%] bg-red-400 overflow-y-auto">
+        <div class="said-me">
+          u up?
+        </div>
+        <div class="said-they">
+          knock
+        </div>
+        <div class="said-they">
+          knock
+        </div>
+        <div class="said-me">
+          who
+        </div>
+        <div class="said-me">
+          is
+        </div>
+        <div class="said-me">
+          there?
+        </div>
+
+        <div class="said-they">testing<br />for<br />overflow!</div>
+        <div class="said-me">testing<br />for<br />overflow?</div>
+        <div class="said-they">testing<br />for<br />overflow!</div>
+        <div class="said-me">testing<br />for<br />overflow?</div>
+        <div class="said-they">testing<br />for<br />overflow!</div>
+        <div class="said-me">testing<br />for<br />overflow?</div>
+        <div class="said-they">testing<br />for<br />overflow!</div>
+        <div class="said-me">testing<br />for<br />overflow?</div>
+        <div class="said-they">testing<br />for<br />overflow!</div>
+        <div class="said-me">testing<br />for<br />overflow?</div>
+        <div class="said-they">testing<br />for<br />overflow!</div>
+        <div class="said-me">testing<br />for<br />overflow?</div>
+      </main>
+
+      <form id="draftMessageForm" class="h-[6.25%] bg-red-200 flex justify-around items-center">
+        <input type="text" id="messageDraft" name="messageDraft" placeholder="Type a message..." class="w-11/12 h-5/6 p-4 rounded-full" />
+        <button class="bg-blue-600 p-4 h-full inline-block r-0" role="submit">
+          <img src="./arrow-icon.png" alt="pointed arrow to submit form" class="h-full w-full r-0" />
+        </button>
+      </form>
+    </section>
+  </body>
+</html>
