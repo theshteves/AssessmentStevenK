@@ -19,8 +19,18 @@
 
       .said      { padding: 1rem; margin: 1rem; clear: both; }
       .said-me   { float: right; text-align: right; margin-bottom: 0; }
-      .said-they { float: left; margin: 0 0 0 3rem; }
-      .said-they::before { content: ""; display: inline-block; background-image: url("https://cdn.vuetifyjs.com/images/lists/1.jpg"); background-size: cover; background-position: center center; border-radius: 8rem; width: 2rem; height: 2rem; margin-left: -3.5rem; }
+      .said-they { float: left; margin: 0 0 0 3rem; padding-top: 0; }
+      .said-they::before {
+        content: "";
+        display: inline-block;
+        background-image: url("https://cdn.vuetifyjs.com/images/lists/1.jpg");
+        background-size: cover;
+        background-position: center;
+        border-radius: 8rem;
+        width: 2rem;
+        height: 2rem;
+        margin-left: -3.5rem;
+      }
 
       .said      > .said-time { max-width: 100%; margin-top: -2rem; font-size: 10px; font-weight: 200; white-space: nowrap; color: dimgray; }
       .said-me   > .said-time { margin-right: -1rem; white-space: nowrap; text-align: right; }
@@ -185,6 +195,99 @@
           <img src="./arrow-icon.png" alt="pointed arrow to submit form" class="h-full" />
         </button>
       </form>
+
+      <script type="text/javascript">
+        const harshSanitize = (text) => text.replace(/[^a-z0-9_ \.,\'!?]+/gim, '') || `__message_censored_error__`; // utility explained in my section2 answer (wipes all but a small subset of characters)
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+          let draftMessageForm = document.getElementById('draftMessageForm');
+          let messageHistory = document.getElementById('messageHistory');
+
+          function postMessage(text, fromMe=true) {
+            let message = harshSanitize(text); // "double masking": re-santize inputs in case the caller forgot
+
+            let newMessageNode = document.createElement('div');
+            newMessageNode.setAttribute('class', fromMe ? 'said said-me' : 'said said-they');
+
+            let timestamp = document.createElement('p');
+            timestamp.setAttribute('class', 'said-time');
+            timestamp.innerText = new Date().toLocaleString();
+            newMessageNode.appendChild(timestamp);
+
+            let newMessageBody = document.createElement('p');
+            newMessageBody.setAttribute('class', 'said-body');
+            newMessageBody.innerText = message;
+            newMessageNode.appendChild(newMessageBody);
+
+            messageHistory.appendChild(newMessageNode);
+            messageHistory.scrollTo(0, messageHistory.scrollHeight); // auto-scroll down to reveal message
+          }
+
+
+
+          // auto-scroll down to most-recent message when resizing window
+          window.addEventListener('resize', () => {
+            messageHistory.scrollTo(0, messageHistory.scrollHeight);
+          });
+
+
+          draftMessageForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Don't "actually" submit form & reload page
+
+            let message = harshSanitize(draftMessageForm.elements['messageDraft'].value);
+            if (!message) { return false; }
+            postMessage(message);
+            draftMessageForm.elements['messageDraft'].value = ''; // clear draft
+
+
+            //
+            // just for fun, license DeepMind's state-of-the-art AI
+            // (this deserves to be pulled out into its own abstraction with unit tests)
+            //
+            let choice = Math.floor(Math.random() * CANNED_RESPONSES.length);
+
+            // Impress them with multi-text responses
+            let responses = CANNED_RESPONSES[choice].split('&');
+            console.log(responses);
+            let delaySequence = responses.map((response, sequenceNumber) => [
+              (1000 / (1 + sequenceNumber)) + 2000 * Math.random(), // thinking delay (generally shorter over time)
+              (500 / (1 + sequenceNumber)) + 2000 * Math.random() // typing delay (generally shorter over time)
+            ]);
+
+            // Propagate delays so multi-responses will always arrive naturally & in-order
+            delaySequence.sort().reverse(); // gaurantee that random delays are ordered descendingly so that responses accelerate
+            for (let i = 0; i < delaySequence.length - 1; i++) {
+              delaySequence[i + 1][0] += (delaySequence[i][0] + delaySequence[i][1]) + 250; // compound each delay in the sequence
+            }
+            console.log(delaySequence);
+
+            responses.forEach((response) => {
+              let [thinkingDelay, typingDelay] = delaySequence.shift();
+              console.log(`think: ${thinkingDelay} & type: ${typingDelay}`);
+
+              setTimeout(() => {
+                postMessage('...', fromMe=false); // inject typing indicator
+
+                setTimeout(() => {
+                  // Fish through multiple indicators (in case they're spamming multiple messages)
+                  let typingIndicators = document.querySelectorAll('.said-they');
+                  typingIndicators = [...typingIndicators].filter(element => element.children[1].innerText === '...'); // element.querySelector('.said-body').innerText is less efficient, but more future-proof
+                  if (typingIndicators) { console.log(typingIndicators); messageHistory.removeChild(typingIndicators[0]); }
+
+                  postMessage(response, fromMe=false);
+                }, typingDelay);
+              }, thinkingDelay);
+            });
+          });
+
+
+          // Sppok them with a simulated message
+          setTimeout(() => { postMessage('Seriously, ask me anything...', fromMe=false); }, 2500);
+        });
+
+        const CANNED_RESPONSES = ["Have you tried testing different screen sizes yet?&He did a decent job!&even on mobile", "Nice.&What else?", "Do you really think that?&I was JUST chatting with Steven about this on the phone", "This is awkward...", "What makes you say that?", "I'm going to pretend like I didn't just read that", "Would you prefer I follow-up over email?&or even text?", "Sorry, I got to go&Tell Steven I said hi!", "Did he get the job?&like actually?", "I just hope he got the job&He's great at rapid prototyping&We went to lots of hackathons together&worked on lots of different tools", "What did you think of Steven though?", "You should ask him&He's always got a lot to say&like A LOT", "I'm so proud of Steven&...don't tell him I said that&please."];
+      </script>
     </section>
   </body>
 </html>
