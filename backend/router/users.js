@@ -13,7 +13,7 @@ const router = new express.Router();
 // Verify 'users' table existence immediately on module import
 (async () => {
 
-  console.log(`💡 Verifying users table exists`);
+  console.info(`💡 Verifying users table exists`);
   const tableQueryString = `
     SELECT EXISTS (
       SELECT FROM information_schema.tables
@@ -27,9 +27,9 @@ const router = new express.Router();
     connection.connect();
     const response = await connection.query(tableQueryString);
 
-    // Recreate users table schema if not found
+    // Recreate users table from schema if not found
     if (!response.rows[0].exists) {
-      console.log(`❌ users table not found, but that's okay:\n💡 Creating a new users table from scratch`);
+      console.warn(`❌ users table not found, but that's okay:\n💡 Creating a new users table from scratch`);
       const queryString = `
         CREATE TABLE users (
           id SERIAL PRIMARY KEY,
@@ -38,15 +38,15 @@ const router = new express.Router();
       `;
 
       await connection.query(queryString);
-      console.log(`✅ users table created`);
+      console.info(`✅ users table created`);
 
     } else {
-      console.log(`✅ users table found`);
+      console.info(`✅ users table found`);
     }
 
 
   } catch (e) {
-    console.log(`❌ Cannot access nor create users table. Is PostGreSQL running in a seperate process & listening on localhost at port 5432?`);
+    console.warn(`❌ Cannot access nor create users table. Is PostGreSQL running in a seperate process & listening on localhost at port ${config.db.port}?`);
     throw e;
 
   } finally {
@@ -60,10 +60,10 @@ const router = new express.Router();
 router.get('/api/v0/users/?', async (req, res) => {
   console.info(`\n => 🌐 GET ${req.originalUrl}`);
 
-  const name = req.query.name; // TODO: SANITIZE YOUR INPUTS
+  const { name } = req.query; // TODO: SANITIZE YOUR INPUTS
   const queryString = `SELECT * FROM users`
     + (name ? ` WHERE name LIKE '%${name}%';` : `;`); // TODO: SANITIZE YOUR INPUTS
-  console.log(`💡 Fetching all users`
+  console.info(`💡 Fetching all users`
     + (name ? ` with name(${name})` : ``));
 
 
@@ -97,9 +97,9 @@ router.get('/api/v0/users/?', async (req, res) => {
 router.get('/api/v0/users/:id', async (req, res) => {
   console.info(`\n => 🌐 GET ${req.originalUrl}`);
 
-  const id = req.params.id; // TODO: SANITIZE YOUR INPUTS
+  const { id } = req.params; // TODO: SANITIZE YOUR INPUTS
   const queryString = `SELECT * FROM users WHERE id = ${id};`; // TODO: SANITIZE YOUR INPUTS
-  console.log(`💡 Fetching id(${id})`);
+  console.info(`💡 Fetching id(${id})`);
 
 
   const connection = new Client(config.db);
@@ -142,18 +142,19 @@ router.get('/api/v0/users/:id', async (req, res) => {
 router.post('/api/v0/users/?', async (req, res) => {
   console.info(`\n => 🌐 POST ${req.originalUrl}`);
 
-  const name = req.body.name; // TODO: SANITIZE YOUR INPUTS
+  const { name } = req.body; // TODO: SANITIZE YOUR INPUTS
   if (!name) {
     console.warn(` <= ❌ Query Failure: invalid, empty name provided \n`);
     res.status(400).send({
       success: false,
-      message: `name must be non-empty`,
+      message: `parameter "name" must be non-empty (try double-checking your spelling)`,
     })
   }
 
+  // TODO: add 4xx error for name > 256 characters
   
   const queryString = `INSERT INTO users(name) VALUES ('${name}') RETURNING *;`; // TODO: SANITIZE YOUR INPUTS
-  console.log(`💡 Adding user with name(${name})`);
+  console.info(`💡 Adding user with name(${name})`);
 
 
   const connection = new Client(config.db);
