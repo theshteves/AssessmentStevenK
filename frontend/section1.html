@@ -178,16 +178,7 @@
         <h2 class="text-xl ml-2 font-medium">John Smith</h2>
       </div>
 
-      <main id="messageHistory" class="h-[calc(100vh-8rem)] pt-4 overflow-y-auto">
-        <div class="said said-me">
-          <p class="said-time">1/1/2022, 1:11:11 AM</p>
-          <p class="said-body">Hey! Do you have a minute?</p>
-        </div>
-        <div class="said said-they">
-          <p class="said-time">1/1/2022, 1:11:11 AM</p>
-          <p class="said-body">Sure, what's up?</p>
-        </div>
-      </main>
+      <main id="messageHistory" class="h-[calc(100vh-8rem)] pt-4 overflow-y-auto"></main>
 
       <form id="draftMessageForm" class="h-16 flex justify-around items-center">
         <input type="text" id="messageDraft" name="messageDraft" placeholder="Type a message... (seriously, try it)" class="w-11/12 h-5/6 p-4 mx-2 rounded-full bg-[#f0f0f0]" />
@@ -283,7 +274,9 @@
 
 
           // Sppok them with a simulated message
-          setTimeout(() => { postMessage('Seriously, ask me anything...', fromMe=false); }, 2500);
+          setTimeout(() => { postMessage(`Hey! Do you have a minute?`, fromMe=true); }, 500);
+          setTimeout(() => { postMessage(`Sure, what\'s up?`, fromMe=false); }, 2000);
+          setTimeout(() => { postMessage(`Seriously, ask me anything...`, fromMe=false); }, 2500);
         });
 
         const CANNED_RESPONSES = ["Have you tried testing different screen sizes yet?&He did a decent job!&even on mobile", "Nice.&What else?", "Do you really think that?&I was JUST chatting with Steven about this on the phone", "This is awkward...", "What makes you say that?", "I'm going to pretend like I didn't just read that", "Would you prefer I follow-up over email?&or even text?", "Sorry, I got to go&Tell Steven I said hi!", "Did he get the job?&like actually?", "I just hope he got the job&He's great at rapid prototyping&We went to lots of hackathons together&worked on lots of different tools", "What did you think of Steven though?", "You should ask him&He's always got a lot to say&like A LOT", "I'm so proud of Steven&...don't tell him I said that&please."];
