@@ -1,20 +1,13 @@
 const express = require('express');
 const { body, query, param, validationResult } = require('express-validator');
 const { Client } = require('pg');
-const process = require('process');
 //const jwt = require('express-jwt');
 // TODO: implement basic authentication
 
+const config = require('../config')
+
 
 const router = new express.Router();
-const postgres_config = {
-  user: process.env.PG_USER || 'stevenkneiser',
-  host: process.env.PG_HOST || 'localhost',
-  database: process.env.PG_DATABASE || 'postgres',
-  password: process.env.PG_PASSWORD,
-  port: process.env.PG_PORT || 5432,
-};
-
 
 
 // Verify 'users' table existence immediately on module import
@@ -29,7 +22,7 @@ const postgres_config = {
   `;
 
 
-  const connection = new Client(postgres_config);
+  const connection = new Client(config.db);
   try {
     connection.connect();
     const response = await connection.query(tableQueryString);
@@ -40,7 +33,7 @@ const postgres_config = {
       const queryString = `
         CREATE TABLE users (
           id SERIAL PRIMARY KEY,
-          name varchar(255) NOT NULL
+          name varchar(256) NOT NULL
         );
       `;
 
@@ -74,7 +67,7 @@ router.get('/api/v0/users/?', async (req, res) => {
     + (name ? ` with name(${name})` : ``));
 
 
-  const connection = new Client(postgres_config);
+  const connection = new Client(config.db);
   try {
     connection.connect();
     const response = await connection.query(queryString); // TODO: SANITIZE YOUR INPUTS
@@ -109,7 +102,7 @@ router.get('/api/v0/users/:id', async (req, res) => {
   console.log(`💡 Fetching id(${id})`);
 
 
-  const connection = new Client(postgres_config);
+  const connection = new Client(config.db);
   try {
     connection.connect();
     const response = await connection.query(queryString); // TODO: SANITIZE YOUR INPUTS
@@ -163,7 +156,7 @@ router.post('/api/v0/users/?', async (req, res) => {
   console.log(`💡 Adding user with name(${name})`);
 
 
-  const connection = new Client(postgres_config);
+  const connection = new Client(config.db);
   try {
     connection.connect();
     const response = await connection.query(queryString); // TODO: SANITIZE YOUR INPUTS
