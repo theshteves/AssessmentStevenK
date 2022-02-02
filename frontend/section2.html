@@ -82,7 +82,7 @@
           let lastName = scrubForAlphanumeric(nameForm.elements['lastName'].value);
           let fullName = `${firstName} ${lastName}`;
 
-          console.log('💡 Rendering full name, ${fullName}');
+          console.log(`💡 Rendering full name:\n"${fullName}"`);
           nameTarget.innerHTML = fullName;
         });
       </script>

@@ -1,3 +1,5 @@
+> _"Thanks for the fun assessment!"_<br />—[Steven Kneiser](https://github.com/theshteves)
+
 # Preventia Group Inc. Take-home Assessment
 
 ## Format:
